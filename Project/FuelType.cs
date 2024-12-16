@@ -8,6 +8,6 @@ namespace Project
 {
     public enum FuelType
     {
-        Gasoline = 1, Diesel
+        Gasoline92 = 1,Gasoline95, Diesel
     }
 }

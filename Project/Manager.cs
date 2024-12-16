@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    internal class Manager:Employee
+    public class Manager:Employee
     {
         private string name;
         private int age;

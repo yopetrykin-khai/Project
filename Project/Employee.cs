@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    internal abstract class Employee:IPerson
+    public abstract class Employee:IPerson
     {
         public abstract string Name { get; set; }
         public abstract int Age { get; set; }

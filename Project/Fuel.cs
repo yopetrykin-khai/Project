@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    internal class Fuel:IComparable<Fuel>
+    public class Fuel:IComparable<Fuel>
     {
         public string Name {  get; set; }
         private double costperl;

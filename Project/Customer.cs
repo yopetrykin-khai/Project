@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    internal class Customer:IPerson
+   public class Customer:IPerson
     {
 
         private string name = "";
@@ -15,7 +15,6 @@ namespace Project
         private FuelType askedfuel;
         private double moneytopay;
         public double MoneyToPay { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
         public double AmountOfFuelAsked { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public FuelType AskedFuel { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public string Name { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    internal class GasStation
+    public class GasStation:IPrintable
     {
         private double budget;
         public Manager Manager { get; set; }
@@ -18,6 +18,13 @@ namespace Project
         {
             throw new NotImplementedException();
         }
-
+        public double CalculateFuelCost(FuelType fuelName, double amount)
+        {
+            throw new NotImplementedException();
+        }
+        string GetInfo()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
