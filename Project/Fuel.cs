@@ -6,12 +6,25 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    internal class Fuel
+    internal class Fuel:IComparable<Fuel>
     {
-        public string Name { get; set; }
-        private double cost;
+        public string Name {  get; set; }
+        private double costperl;
+        private double finalcost;
         private double amount;
         private FuelType type;
+        public double CostPerLitr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public double FinalCost(double amountasked)
+        {
+            throw new NotImplementedException();
+        }
+        public double Amount { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public FuelType Type { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public Fuel(string name, FuelType fuel, double cost, double amount) { throw new NotImplementedException(); }
+        public int CompareTo(Fuel other)
+        {
+            if (other == null) return 1;
+            return CostPerLitr.CompareTo(other.CostPerLitr);
+        }
     }
 }

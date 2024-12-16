@@ -8,9 +8,9 @@ namespace Project
 {
     internal abstract class Employee:IPerson
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
-        public double Salary {  get; set; }
+        public abstract string Name { get; set; }
+        public abstract int Age { get; set; }
+        public abstract double Salary {  get; set; }
         public virtual double CalculateSalary()
         {
             throw new NotImplementedException();
