@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -27,14 +28,6 @@ namespace Project
         public List<Fuel> Fuel { get; set; }
         public event Action<string> OnFuelPurchase; 
         public event Action<string> OnFuelOutOfStock;    
-        public double Budget 
-        { 
-            get { return budget; } 
-            set 
-            { 
-                throw new NotImplementedException();
-            } 
-        }
         public GasStation(Worker worker, Manager manager)
         {
             Fuel = new List<Fuel>();
@@ -49,29 +42,32 @@ namespace Project
             Manager = manager;
             Worker = worker;
         }
-        public double CalculateBudget 
-        { 
-            get 
-            { return budget; } 
-            set 
-            { 
-                if (!isEmpty(Customers)) 
-                {
-                    foreach (Customer customer in Customers)
-                    {
-                        budget += customer.MoneyToPay;
-                    }
-                } 
-            } 
+        public double CalculateBudget
+        {
+            get { return budget; }
         }
 
-        public void BuyFuel(FuelType fuelType, double amount, FuelCostCalculator costCalculator)
+        public void UpdateBudget()
+        {
+            if (!isEmpty(Customers))
+            {
+                double bg = 0;
+                foreach (Customer customer in Customers)
+                {
+                    bg += customer.MoneyToPay;
+                }
+                budget = bg;
+            }
+        }
+
+        public void BuyFuel(FuelType fuelType, double amount, FuelCostCalculator costCalculator, Customer customer)
         {
             var fuel = (Fuel.Find(f => f.Type == fuelType));
 
             if (fuel != null && amount <= fuel.Amount)
             {
                 double cost = costCalculator(fuelType, amount);
+                customer.MoneyToPay = cost;    
                 fuel.Amount -= amount;
                 Manager.CalculateSalary(cost);
                 Worker.CalculateSalary(cost);
@@ -87,6 +83,10 @@ namespace Project
             string s = "";
             s += $"\nManager`s name is {Manager.Name}, he is {Manager.Age}, his salary is {Manager.Salary}$ at the moment\n";
             s += $"Worker`s name is {Worker.Name}, he is {Worker.Age}, his salary is {Worker.Salary}$ at the moment\n";
+            foreach (var fuel in Fuel)
+            {
+                s+=($" - Fuel type: {fuel.Type}, Amount: {fuel.Amount}L, Cost: ${fuel.Costperl}\n");
+            }
             if (!isEmpty(Customers))
             {
                 s += "All the clients served:\n";
@@ -101,6 +101,7 @@ namespace Project
             {
                 s += "No clients served yet\n";
             }
+            UpdateBudget();
             s += $"Companies budget: {CalculateBudget}";
             return s;
         }

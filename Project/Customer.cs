@@ -14,8 +14,19 @@ namespace Project
         private double amountoffuelasked;
         private FuelType askedfuel;
         private double moneytopay;
-        public double MoneyToPay { get { return moneytopay; } set { throw new NotImplementedException(); } }
-        public double AmountOfFuelAsked { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public double MoneyToPay { get { return moneytopay; } set { moneytopay = value; } }
+        public double AmountOfFuelAsked
+        {
+            get { return amountoffuelasked; }
+            set
+            {
+                if (value <= 0)
+                {
+                    throw new Exception($"The amount of fuel asked must be greater than zero! ({value})");
+                }
+                amountoffuelasked = value;
+            }
+        }
         public FuelType AskedFuel
         {
             get { return askedfuel; }
