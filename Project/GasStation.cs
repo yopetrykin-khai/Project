@@ -76,13 +76,18 @@ namespace Project
             else
             {
                 OnFuelOutOfStock?.Invoke($"Insufficient fuel! Requested: {amount}L, Available: {(fuel != null ? fuel.Amount : 0)}L.");
+                double cost = costCalculator(fuelType, fuel.Amount);
+                customer.MoneyToPay = cost;
+                Manager.CalculateSalary(cost);
+                Worker.CalculateSalary(cost);
+                fuel.Amount = 0;
             }
         }
         public string GetInfo()
         {
             string s = "";
-            s += $"\nManager`s name is {Manager.Name}, he is {Manager.Age}, his salary is {Manager.Salary}$ at the moment\n";
-            s += $"Worker`s name is {Worker.Name}, he is {Worker.Age}, his salary is {Worker.Salary}$ at the moment\n";
+            s += $"\nManager`s name is {Manager.Name}, he is {Manager.Age}, his salary is {Manager.Salary}$ at the moment.\n";
+            s += $"Worker`s name is {Worker.Name}, he is {Worker.Age}, his salary is {Worker.Salary}$ at the moment.\n";
             foreach (var fuel in Fuel)
             {
                 s+=($" - Fuel type: {fuel.Type}, Amount: {fuel.Amount}L, Cost: ${fuel.Costperl}\n");
@@ -102,7 +107,7 @@ namespace Project
                 s += "No clients served yet\n";
             }
             UpdateBudget();
-            s += $"Companies budget: {CalculateBudget}";
+            s += $"Companies budget: {CalculateBudget}$";
             return s;
         }
     }

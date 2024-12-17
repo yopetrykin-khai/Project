@@ -24,6 +24,10 @@ namespace Project
                 {
                     throw new Exception($"The amount of fuel asked must be greater than zero! ({value})");
                 }
+                if(value > 5000)
+                {
+                    throw new Exception($"The amount of fuel can not be greater than 5000! ({value})");
+                }
                 amountoffuelasked = value;
             }
         }
