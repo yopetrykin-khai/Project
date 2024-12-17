@@ -91,7 +91,7 @@ namespace Project
             if (words.Length != 2) { throw new Exception("Wrong number of parameters"); }
             if (!int.TryParse(words[1], out int type1))
             {
-                throw new Exception($"Wrong age!({words[2]})");
+                throw new Exception($"Wrong age!({words[1]})");
             }
             return new Manager(words[0], int.Parse(words[1]));
         }
