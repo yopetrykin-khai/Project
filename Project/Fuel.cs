@@ -9,22 +9,20 @@ namespace Project
     public class Fuel:IComparable<Fuel>
     {
         public string Name {  get; set; }
-        private double costperl;
-        private double finalcost;
-        private double amount;
-        private FuelType type;
-        public double CostPerLitr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public double FinalCost(double amountasked)
+        public double Costperl { get; set; }
+        public double Amount { get; set; }
+        public FuelType Type { get; set; }
+        public Fuel(string name, FuelType fuel, double cost, double amount) 
         {
-            throw new NotImplementedException();
+            Name = name;
+            Costperl = cost;
+            Type = fuel;
+            Amount = amount;
         }
-        public double Amount { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public FuelType Type { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public Fuel(string name, FuelType fuel, double cost, double amount) { throw new NotImplementedException(); }
         public int CompareTo(Fuel other)
         {
             if (other == null) return 1;
-            return CostPerLitr.CompareTo(other.CostPerLitr);
+            return Costperl.CompareTo(other.Costperl);
         }
     }
 }

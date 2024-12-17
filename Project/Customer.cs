@@ -14,14 +14,74 @@ namespace Project
         private double amountoffuelasked;
         private FuelType askedfuel;
         private double moneytopay;
-        public double MoneyToPay { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public double MoneyToPay { get { return moneytopay; } set { throw new NotImplementedException(); } }
         public double AmountOfFuelAsked { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public FuelType AskedFuel { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public string Name { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int Age { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public FuelType AskedFuel
+        {
+            get { return askedfuel; }
+            set
+            {
+                if (Enum.IsDefined(typeof(FuelType), value))
+                {
+                    askedfuel = value;
+                }
+                else
+                {
+                    throw new Exception($"Wrong type! Invalid type value({value}).");
+                }
+            }
+        }
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                {
+                    throw new Exception("You should input name for the customer!");
+                }
+                foreach (char c in value)
+                {
+                    if (!char.IsLetter(c))
+                    {
+                        throw new Exception($"English letters only!({value})");
+                    }
+                    if (c < 'A' || c > 'z')
+                    {
+                        throw new Exception($"English letters only!({value})");
+                    }
+                }
+                name = value;
+            }
+        }
+        public int Age
+        {
+            get
+            {
+                return age;
+            }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new Exception($"Age of the worker has to be above zero! ({value})");
+                }
+                age = value;
+            }
+        }
         public Customer(string name, int age, double amount, FuelType type)
         {
-            throw new NotImplementedException();
+            Name = name;
+            Age = age;
+            AmountOfFuelAsked = amount;
+            AskedFuel = type;
+        }
+        public override string ToString()
+        {
+            return $"Name: {Name}, Age: {Age}, Amount of fuel asked: {AmountOfFuelAsked}, What fuel the client asked for: {(FuelType)AskedFuel}, Amount of money to pay: {MoneyToPay}";
         }
         public static Customer Parse(string s)
         {
@@ -29,7 +89,7 @@ namespace Project
             {
                 throw new ArgumentNullException();
             }
-            string[] words = s.Split(';', StringSplitOptions.RemoveEmptyEntries);
+            string[] words = s.Split(',', StringSplitOptions.RemoveEmptyEntries);
             if (words.Length != 4) { throw new Exception("Wrong number of parameters"); }
             if (!int.TryParse(words[1], out int type1))
             {

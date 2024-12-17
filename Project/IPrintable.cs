@@ -8,9 +8,6 @@ namespace Project
 {
     internal interface IPrintable
     {
-        string GetInfo()
-        {
-            throw new NotImplementedException();
-        }
+        string GetInfo();
     }
 }

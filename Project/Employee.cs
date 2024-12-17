@@ -11,9 +11,10 @@ namespace Project
         public abstract string Name { get; set; }
         public abstract int Age { get; set; }
         public abstract double Salary {  get; set; }
-        public virtual double CalculateSalary()
+        public virtual void CalculateSalary(double cost)
         {
-            throw new NotImplementedException();
+            double salary = cost;
+            Salary = salary;
         }
 
     }
