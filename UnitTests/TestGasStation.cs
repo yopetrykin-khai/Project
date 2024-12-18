@@ -10,74 +10,107 @@ namespace UnitTests
     public class TestGasStation
     {
         [TestMethod]
-        public void TestCalculate()
+        public void TestCalculateFuelCost()
         {
             // Arrange
             Worker worker = new Worker("Eugene", 19);
-            Manager manager = new Manager("Max", 19);
+            Manager manager = new Manager("Max", 25);
             FuelType fuel = FuelType.Gasoline92;
             double amount = 500;
             double expected = 25000;
             GasStation gasStation = new GasStation(worker, manager);
-            // Act
-            double final = gasStation.CalculateFuelCost(fuel, amount);
-            // Assert
-            Assert.AreEqual(expected, final);
 
-        }
-    }
-    [TestClass]
-    public class TestFuel
-    {
-        [TestMethod]
-        public void TestFinalCost()
-        {
-            // Arrange
-            Fuel fuel = new Fuel("Fuel92", FuelType.Gasoline92, 50, 5000);
-            double amount = 500;
-            double expected = 25000;
             // Act
-            double final = fuel.FinalCost(amount);
+            double final = gasStation.Fuel.Find(f => f.Type == fuel).Costperl * amount;
+
             // Assert
             Assert.AreEqual(expected, final);
         }
-    }
-    [TestClass]
-    public class TestWorker
-    {
+
         [TestMethod]
-        public void TestSalaryWorker()
+        public void TestAddCustomer()
         {
             // Arrange
-            Fuel fuel = new Fuel("Fuel92", FuelType.Gasoline92, 50, 5000);
-            Worker worker = new Worker("Eugene", 20);
-            double amount = 500;
-            double expected = 25000;
-            double expected1 = 40;
+            Worker worker = new Worker("Eugene", 19);
+            Manager manager = new Manager("Max", 25);
+            GasStation gasStation = new GasStation(worker, manager);
+            Customer customer = new Customer("Alice", 28, 40, (FuelType)2);
             // Act
-            double final = fuel.FinalCost(amount);
-            double final1 = worker.CalculateSalary();
+            gasStation.Customers.Add(customer);
             // Assert
-            Assert.AreEqual(expected1, final1);
+            Assert.AreEqual(1, gasStation.Customers.Count);
+            Assert.AreEqual("Alice", gasStation.Customers[0].Name);
         }
-    }
-    [TestClass]
-    public class TestManager
-    {
+
         [TestMethod]
-        public void TestSalaryManager()
+        public void TestRefillFuelStock()
         {
             // Arrange
-            Fuel fuel = new Fuel("Fuel92", FuelType.Gasoline92, 50, 5000);
-           Manager manager = new Manager("Eugene", 20);
-            double amount = 500;
-            double expected = 25000;
-            double expected1 = 40;
+            Worker worker = new Worker("Eugene", 19);
+            Manager manager = new Manager("Max", 25);
+            GasStation gasStation = new GasStation(worker, manager);
+            FuelType fuelType = FuelType.Gasoline92;
+            double refillAmount = 1000;
+            double initialAmount = gasStation.Fuel.Find(f => f.Type == fuelType).Amount;
             // Act
-            double final = fuel.FinalCost(amount);
-            double final1 = manager.CalculateSalary();
+            gasStation.Fuel.Find(f => f.Type == fuelType).Amount += refillAmount;
             // Assert
-            Assert.AreEqual(expected1, final1);
+            Assert.AreEqual(initialAmount + refillAmount, gasStation.Fuel.Find(f => f.Type == fuelType).Amount);
+        }
+
+        [TestMethod]
+        public void TestCalculateBudget()
+        {
+            // Arrange
+            Worker worker = new Worker("Eugene", 19);
+            Manager manager = new Manager("Max", 25);
+            GasStation gasStation = new GasStation(worker, manager);
+            Customer customer = new Customer("Alice", 28, 40, (FuelType)2);
+            double initialAmount = gasStation.Fuel.Find(f => f.Type == customer.AskedFuel).Amount;
+            double expectedCost = gasStation.Fuel.Find(f => f.Type == customer.AskedFuel).Costperl * customer.AmountOfFuelAsked;
+            gasStation.Customers.Add(customer);
+            // Act
+            gasStation.BuyFuel(customer.AskedFuel, customer.AmountOfFuelAsked, (fuelType, amount) => expectedCost, customer); 
+            gasStation.UpdateBudget();
+            // Assert
+            Assert.AreEqual(2200, gasStation.CalculateBudget);
+        }
+
+        [TestMethod]
+        public void TestBuyFuel_SuccessfulPurchase()
+        {
+            // Arrange
+            Worker worker = new Worker("Eugene", 19);
+            Manager manager = new Manager("Max", 25);
+            GasStation gasStation = new GasStation(worker, manager);
+            Customer customer = new Customer("John", 30, 50, (FuelType)1);
+            double initialAmount = gasStation.Fuel.Find(f => f.Type == customer.AskedFuel).Amount;
+            double expectedCost = gasStation.Fuel.Find(f => f.Type == customer.AskedFuel).Costperl * customer.AmountOfFuelAsked;
+            // Act
+            gasStation.BuyFuel(customer.AskedFuel, customer.AmountOfFuelAsked, (fuelType, amount) => expectedCost, customer);
+            // Assert
+            Assert.AreEqual(initialAmount - 50, gasStation.Fuel.Find(f => f.Type == customer.AskedFuel).Amount);
+            Assert.AreEqual(expectedCost, customer.MoneyToPay);
+        }
+
+        [TestMethod]
+        public void TestBuyFuel_InsufficientStock()
+        {
+            // Arrange
+            Worker worker = new Worker("Eugene", 19);
+            Manager manager = new Manager("Max", 25);
+            GasStation gasStation = new GasStation(worker, manager);
+            Customer customer = new Customer ("John",30,5000,(FuelType)1);
+            Customer customer1 = new Customer ("Alice",30,5000,(FuelType)1);
+            double initialAmount = gasStation.Fuel.Find(f => f.Type == customer.AskedFuel).Amount;
+            double expectedCost = gasStation.Fuel.Find(f => f.Type == customer.AskedFuel).Costperl * initialAmount;
+            // Act
+            gasStation.BuyFuel(customer.AskedFuel, customer.AmountOfFuelAsked, (fuelType, amount) => expectedCost, customer);
+            gasStation.BuyFuel(customer1.AskedFuel, customer1.AmountOfFuelAsked, (fuelType, amount) => expectedCost, customer1);
+            // Assert
+            Assert.AreEqual(0, gasStation.Fuel.Find(f => f.Type == customer.AskedFuel).Amount);
+            Assert.AreEqual(expectedCost, customer1.MoneyToPay);
         }
     }
+
 }
